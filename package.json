@@ -1,0 +1,24 @@
+{
+  "name": "image-repository",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mongodb": "^3.6.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JacobRajah/Image-Repo.git"
+  },
+  "author": "Jacob Rajah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JacobRajah/Image-Repo/issues"
+  },
+  "homepage": "https://github.com/JacobRajah/Image-Repo#readme"
+}
