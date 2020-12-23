@@ -18,6 +18,14 @@ Once you have a copy of the source code, ensure you have **npm** installed and r
 $ npm install
 ```
 
+You will then need to setup an account at **https://www.mongodb.com/cloud/atlas/** and create a database named **ImageRepo** and a collection within that database named **Images**. Once the database has been setup, you can create a local .env file and enter the following into the file:
+
+```
+DB="<connection string here>"
+```
+
+Once you have completed the steps above you should be ready to work with the Image Repo.
+
 ### Running the Program
 
 You are now ready to run the software! Simply execute the following in the directory containing **main.js**:

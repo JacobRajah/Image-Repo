@@ -3,12 +3,16 @@ require('dotenv').config() //set env
 const readline = require('readline');
 const prompt = require('prompt-sync')({sigint: true})
 const image_repo = require('./image_repo');
+//url connecting to mongo database
 uri = process.env.DB
 
+//Driver function for interfacing database with client
 async function driver() {
     const db = await MongoClient.connect(uri)
     const dbo = await db.db('ImageRepo');
     console.log('Welcome to Image Repo!')
+    // Collect user information for attatching to images uploaded,
+    // purchases and verification
     var user_info = []
     const name = prompt('What is your name: ');
     user_info.push(name);
@@ -19,9 +23,12 @@ async function driver() {
     user_info.push(location);
 
     var ready = true;
+    // Loop ends when ready is false
     while(ready){
+        // Prompt users to choose what they would like to do
         console.log(`${name} you can: Add an Image, Buy an Image, Search Images or Modify properties of Image(s)`)
         const opt = prompt('What would you like to do? (add, buy, search, modify, exit): ')
+        // Buy an image if the image is for Sale
         if(opt.toLowerCase() == 'buy'){
             const id = prompt("Please specify the name of the image you'd like to buy: ")
             var resp = await image_repo.buyImage(dbo, id, user_info)
@@ -33,6 +40,7 @@ async function driver() {
             }
             // End Buy
         }
+        // Search for an image or images based on a descriptor of choice
         else if(opt.toLowerCase() == 'search'){
             var search_method = prompt('Enter the type of search (name, description, price, size, location, status): ');
             const search_target = prompt(`What is the ${search_method} you are looking for? `)
@@ -46,6 +54,7 @@ async function driver() {
                 }
             // End Search
         }
+        // Modify the properties of images already on the repo and 
         else if(opt.toLowerCase() == 'modify'){
             var toBeMod = prompt('What would you like to modify? (price, status): ')
             // Modify the price of an image
@@ -60,7 +69,7 @@ async function driver() {
                     console.log("Price Updated!")
                 }
             }
-            // Modify the status of an image
+            // Modify the status of an image(s)
             else if(toBeMod.toLowerCase() == 'status'){
                 const approach = prompt('Would you like to change status by name or description (name, description) ');
                 if(approach.toLowerCase() == "name"){
@@ -90,6 +99,7 @@ async function driver() {
             }
             // End modify
         }
+        // If true then prompt user for image properties then add image to the repo
         else if(opt.toLowerCase() == 'add'){
             var id = prompt('What is the name of the image? ');
             var valid = await image_repo.checkID(dbo, id);
@@ -106,36 +116,13 @@ async function driver() {
             console.log(`${await resp} image added to the repository`)
 
         }
+        // Exit the program
         else if(opt.toLowerCase() == 'exit'){ready=false}
     }
+    // Close the connection to the database
     db.close();
 
 }
 
+// Run the Program
 driver()
-
-
-    // var results = await findImagesbyParameter(dbo, "descriptors", "Scenic")
-
-    // dispImageData(await results);
-
-    // var resp = await addImage(dbo, 'Oceanside-hotel', 'https://vistapointe.net/images/scenic-8.jpg',
-    //          ['Scenic', 'Ocean', 'Tropical', 'bridge'], "$50", "120x60",
-    //          ['Jacob', '4166667777', 'Toronto, Ontario']);
-
-    // var results = await findImagesbyParameter(dbo, "descriptors", "Scenic")
-
-    // dispImageData(await results);
-    // var resp = await buyImage(dbo, "Oceanside-hotel", ['Bob', "444", 'Brampton, Ontario'])
-    // console.log(await resp);
-
-    // var res = await setPrice(dbo, "Oceanside-hotel", "$35", "4166667777")
-    // console.log(await res);
-
-    // var res = await ChangeStatusByDescriptor(dbo, "Tropical", "For Sale", "4166667777")
-    // console.log(await res);
-
-    // var resp = await ChangeStatusByID(dbo, "Oceanside-hotel", "For Sale", "444")
-    // console.log(await resp);
-
-    // db.close();
